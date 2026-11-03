@@ -517,8 +517,8 @@ with tab_koszty:
     st.dataframe(pd.DataFrame(dane_kosztorys).style.format({"Wartość Netto [PLN]": "{:,.2f}"}), width="stretch", hide_index=True)
     st.markdown(f"### Całkowity Szacunkowy Koszt Robót: {koszt_calkowity:,.2f} PLN netto")
 
-with tab_przekroj: st.pyplot(fig_przekroj, use_container_width=False)
-with tab_rzut: st.pyplot(fig_rzut, use_container_width=False)
+with tab_przekroj: st.pyplot(fig_przekroj, width="content")
+with tab_rzut: st.pyplot(fig_rzut, width="content")
 
 with tab_raport:
     st.header("📄 Szczegółowy Raport Obliczeniowy")
