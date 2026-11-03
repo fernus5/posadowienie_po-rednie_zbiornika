@@ -168,7 +168,7 @@ if "Korelacja" in tryb_gruntu:
         "Stan (ID / IL)": [0.5, 0.0, 0.6, 0.2],
         "Organiczny?": [False, True, False, False]
     })
-    df_wejscie = st.data_editor(domyslne_warstwy, num_rows="dynamic", use_container_width=True)
+    df_wejscie = st.data_editor(domyslne_warstwy, num_rows="dynamic", width="stretch")
     
     # Generowanie df_grunt w tle
     df_grunt = df_wejscie.copy()
@@ -184,7 +184,7 @@ if "Korelacja" in tryb_gruntu:
     df_grunt["M0 (ściśliwość) [MPa]"] = m0_list
     
     with st.expander("Podgląd wyznaczonych parametrów obliczeniowych (z korelacji)", expanded=True):
-        st.dataframe(df_grunt[["Rodzaj gruntu", "Miąższość [m]", "q_sk (pobocznica) [kPa]", "q_bk (podstawa) [kPa]", "M0 (ściśliwość) [MPa]"]].style.format(precision=1), use_container_width=True, hide_index=True)
+        st.dataframe(df_grunt[["Rodzaj gruntu", "Miąższość [m]", "q_sk (pobocznica) [kPa]", "q_bk (podstawa) [kPa]", "M0 (ściśliwość) [MPa]"]].style.format(precision=1), width="stretch", hide_index=True)
 
 else:
     domyslne_warstwy = pd.DataFrame({
@@ -195,7 +195,7 @@ else:
         "M0 (ściśliwość) [MPa]": [20.0, 2.0, 113.3, 43.3],
         "Organiczny?": [False, True, False, False]
     })
-    df_grunt = st.data_editor(domyslne_warstwy, num_rows="dynamic", use_container_width=True)
+    df_grunt = st.data_editor(domyslne_warstwy, num_rows="dynamic", width="stretch")
 
 # ==========================================
 # PĘTLA OBLICZENIOWA (GEO / UPL) - BIEŻĄCY WARIANT
@@ -514,7 +514,7 @@ with tab_koszty:
         ],
         "Wartość Netto [PLN]": [koszt_kruszywo, koszt_beton, koszt_stal, koszt_wiercenie, koszt_skuwanie]
     }
-    st.dataframe(pd.DataFrame(dane_kosztorys).style.format({"Wartość Netto [PLN]": "{:,.2f}"}), use_container_width=True, hide_index=True)
+    st.dataframe(pd.DataFrame(dane_kosztorys).style.format({"Wartość Netto [PLN]": "{:,.2f}"}), width="stretch", hide_index=True)
     st.markdown(f"### Całkowity Szacunkowy Koszt Robót: {koszt_calkowity:,.2f} PLN netto")
 
 with tab_przekroj: st.pyplot(fig_przekroj, use_container_width=False)
@@ -573,7 +573,7 @@ with tab_raport:
     if raport_sgu:
         df_raport_sgu = pd.DataFrame(raport_sgu)
         df_raport_sgu.columns = ["Warstwa Gruntu", "Miąższość h [m]", "Głębokość z' [m]", "Naprężenie σ_z [kPa]", "Moduł M0 [MPa]", "Osiadanie s_i [mm]"]
-        st.dataframe(df_raport_sgu.style.format(precision=2), use_container_width=True, hide_index=True)
+        st.dataframe(df_raport_sgu.style.format(precision=2), width="stretch", hide_index=True)
         st.latex(rf"s = \sum s_i = \mathbf{{{s_calkowite_mm:.2f} \text{{ mm}}}}")
     else:
         st.write("*Brak zdefiniowanych warstw ściśliwych poniżej fundamentu zastępczego.*")
@@ -723,7 +723,7 @@ with tab_optymalizator:
             st.markdown("### Zestawienie 10 najbardziej uzasadnionych ekonomicznie wariantów spełniających warunki projektowe:")
             st.dataframe(df_wyniki.head(10).style.format({
                 "Koszt Całkowity [PLN]": "{:,.2f}", "Wypór UPL [%]": "{:.1f}%", "Nośność GEO [%]": "{:.1f}%", "Osiadanie [mm]": "{:.1f}"
-            }), use_container_width=True)
+            }), width="stretch")
             
             # --- MODUŁ AUTOMATYCZNYCH WNIOSKÓW ---
             najlepszy = df_wyniki.iloc[0]
