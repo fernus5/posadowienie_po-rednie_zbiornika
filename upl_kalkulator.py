@@ -113,7 +113,7 @@ gamma_s_stal = 1.15
 # WSPÓLNE OBLICZENIA GEOMETRII I CIĘŻARÓW
 # ==========================================
 V_zewnetrzna = L_z * B_z * H_z
-V_wewnetrzna = (L_z - 2*grubosc) * (B_z - 2*grubosc) * (H_z - grubosc)
+V_wewnetrzna = (L_z - 2*grubosc) * (B_z - 2*grubosc) * (H_z - 2*grubosc)
 V_betonu = V_zewnetrzna - V_wewnetrzna
 
 G_k_zbiornika = V_betonu * gamma_betonu
@@ -168,7 +168,7 @@ if "Korelacja" in tryb_gruntu:
         "Stan (ID / IL)": [0.5, 0.0, 0.6, 0.2],
         "Organiczny?": [False, True, False, False]
     })
-    df_wejscie = st.data_editor(domyslne_warstwy, num_rows="dynamic", width="stretch")
+    df_wejscie = st.data_editor(domyslne_warstwy, num_rows="dynamic", use_container_width=True)
     
     # Generowanie df_grunt w tle
     df_grunt = df_wejscie.copy()
@@ -184,7 +184,7 @@ if "Korelacja" in tryb_gruntu:
     df_grunt["M0 (ściśliwość) [MPa]"] = m0_list
     
     with st.expander("Podgląd wyznaczonych parametrów obliczeniowych (z korelacji)", expanded=True):
-        st.dataframe(df_grunt[["Rodzaj gruntu", "Miąższość [m]", "q_sk (pobocznica) [kPa]", "q_bk (podstawa) [kPa]", "M0 (ściśliwość) [MPa]"]].style.format(precision=1), width="stretch", hide_index=True)
+        st.dataframe(df_grunt[["Rodzaj gruntu", "Miąższość [m]", "q_sk (pobocznica) [kPa]", "q_bk (podstawa) [kPa]", "M0 (ściśliwość) [MPa]"]].style.format(precision=1), use_container_width=True, hide_index=True)
 
 else:
     domyslne_warstwy = pd.DataFrame({
@@ -195,7 +195,7 @@ else:
         "M0 (ściśliwość) [MPa]": [20.0, 2.0, 113.3, 43.3],
         "Organiczny?": [False, True, False, False]
     })
-    df_grunt = st.data_editor(domyslne_warstwy, num_rows="dynamic", width="stretch")
+    df_grunt = st.data_editor(domyslne_warstwy, num_rows="dynamic", use_container_width=True)
 
 # ==========================================
 # PĘTLA OBLICZENIOWA (GEO / UPL) - BIEŻĄCY WARIANT
@@ -279,7 +279,7 @@ suma_oporow = G_stb_d + R_td_calkowite
 wykorzystanie_upl = (V_dst_d / suma_oporow) * 100 if suma_oporow > 0 else 999
 
 # GEO
-N_Ed_1_pal = ((G_k_calkowite + Q_k_wody_wewnatrz) * gamma_G_geo / liczba_pali) + (ciezar_1_pala_k * gamma_G_geo) + (F_nk_tarcie_neg * gamma_G_geo)
+N_Ed_1_pal = ((G_k_calkowite * gamma_G_geo + Q_k_wody_wewnatrz * gamma_Q_geo) / liczba_pali) + (ciezar_1_pala_k * gamma_G_geo) + (F_nk_tarcie_neg * gamma_G_geo)
 R_cd_1_pal = (R_sk_wciskanie / gamma_s_c) + (R_bk_podstawa / gamma_b_c)
 wykorzystanie_geo = (N_Ed_1_pal / R_cd_1_pal) * 100 if R_cd_1_pal > 0 else 999
 
@@ -334,7 +334,7 @@ def generuj_przekroj(B, H, h_naz, D_f_rys, H_w, D_p, L_p, grunty):
         if y_top < -D_f_rys - L_p - 2.0: break 
         
     ax.add_patch(patches.Rectangle((-B/2, -D_f_rys), B, H, linewidth=2, edgecolor='black', facecolor='#D3D3D3', zorder=3))
-    ax.add_patch(patches.Rectangle((-B/2 + grubosc, -D_f_rys + grubosc), B - 2*grubosc, H - grubosc, linewidth=2, edgecolor='black', facecolor='white', zorder=4))
+    ax.add_patch(patches.Rectangle((-B/2 + grubosc, -D_f_rys + grubosc), B - 2*grubosc, H - 2*grubosc, linewidth=2, edgecolor='black', facecolor='white', zorder=4))
     
     poziom_wody_y = -D_f_rys + H_w
     if H_w > 0:
@@ -514,11 +514,11 @@ with tab_koszty:
         ],
         "Wartość Netto [PLN]": [koszt_kruszywo, koszt_beton, koszt_stal, koszt_wiercenie, koszt_skuwanie]
     }
-    st.dataframe(pd.DataFrame(dane_kosztorys).style.format({"Wartość Netto [PLN]": "{:,.2f}"}), width="stretch", hide_index=True)
+    st.dataframe(pd.DataFrame(dane_kosztorys).style.format({"Wartość Netto [PLN]": "{:,.2f}"}), use_container_width=True, hide_index=True)
     st.markdown(f"### Całkowity Szacunkowy Koszt Robót: {koszt_calkowity:,.2f} PLN netto")
 
-with tab_przekroj: st.pyplot(fig_przekroj, width="content")
-with tab_rzut: st.pyplot(fig_rzut, width="content")
+with tab_przekroj: st.pyplot(fig_przekroj, use_container_width=False)
+with tab_rzut: st.pyplot(fig_rzut, use_container_width=False)
 
 with tab_raport:
     st.header("📄 Szczegółowy Raport Obliczeniowy")
@@ -573,7 +573,7 @@ with tab_raport:
     if raport_sgu:
         df_raport_sgu = pd.DataFrame(raport_sgu)
         df_raport_sgu.columns = ["Warstwa Gruntu", "Miąższość h [m]", "Głębokość z' [m]", "Naprężenie σ_z [kPa]", "Moduł M0 [MPa]", "Osiadanie s_i [mm]"]
-        st.dataframe(df_raport_sgu.style.format(precision=2), width="stretch", hide_index=True)
+        st.dataframe(df_raport_sgu.style.format(precision=2), use_container_width=True, hide_index=True)
         st.latex(rf"s = \sum s_i = \mathbf{{{s_calkowite_mm:.2f} \text{{ mm}}}}")
     else:
         st.write("*Brak zdefiniowanych warstw ściśliwych poniżej fundamentu zastępczego.*")
@@ -643,13 +643,15 @@ with tab_optymalizator:
                         r_sk_wyc += pow_s * r["q_sk (pobocznica) [kPa]"] * alfa_s
                         r_sk_wci += pow_s * r["q_sk (pobocznica) [kPa]"] * alfa_s
                 z_c += miaz
-                if z_c >= D_f + l_p and nazwa_podst == "": r_bk = pole * r["q_bk (podstawa) [kPa]"]
+                if z_c >= D_f + l_p and nazwa_podst == "":
+                    r_bk = pole * r["q_bk (podstawa) [kPa]"]
+                    nazwa_podst = r["Rodzaj gruntu"]
 
             r_td_1 = (r_sk_wyc / gamma_s_t) + (ciezar_1_p * gamma_G_stb_upl)
             suma_op = G_stb_d + (r_td_1 * n_p)
             if V_dst_d > suma_op: return False, "AWARIA UPL", None
             
-            n_ed_1 = ((G_k_calkowite + Q_k_wody_wewnatrz) * gamma_G_geo / n_p) + (ciezar_1_p * gamma_G_geo) + (f_nk_neg * gamma_G_geo)
+            n_ed_1 = ((G_k_calkowite * gamma_G_geo + Q_k_wody_wewnatrz * gamma_Q_geo) / n_p) + (ciezar_1_p * gamma_G_geo) + (f_nk_neg * gamma_G_geo)
             r_cd_1 = (r_sk_wci / gamma_s_c) + (r_bk / gamma_b_c)
             if n_ed_1 > r_cd_1: return False, "AWARIA GEO", None
             
@@ -723,7 +725,7 @@ with tab_optymalizator:
             st.markdown("### Zestawienie 10 najbardziej uzasadnionych ekonomicznie wariantów spełniających warunki projektowe:")
             st.dataframe(df_wyniki.head(10).style.format({
                 "Koszt Całkowity [PLN]": "{:,.2f}", "Wypór UPL [%]": "{:.1f}%", "Nośność GEO [%]": "{:.1f}%", "Osiadanie [mm]": "{:.1f}"
-            }), width="stretch")
+            }), use_container_width=True)
             
             # --- MODUŁ AUTOMATYCZNYCH WNIOSKÓW ---
             najlepszy = df_wyniki.iloc[0]
