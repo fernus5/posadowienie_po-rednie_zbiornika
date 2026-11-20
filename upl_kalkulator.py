@@ -53,7 +53,7 @@ st.sidebar.markdown("### 1. Parametry geometryczne zbiornika ")
 L_z = st.sidebar.number_input("Długość zewnętrzna L [m]", value=10.0, step=1.0)
 B_z = st.sidebar.number_input("Szerokość zewnętrzna B [m]", value=5.0, step=1.0)
 H_z = st.sidebar.number_input("Wysokość całkowita H [m]", value=3.0, step=0.5)
-grubosc = st.sidebar.number_input("Grubość ścian i dna [m]", value=0.3, step=0.05)
+grubosc = st.sidebar.number_input("Grubość ścian, dna i stropu [m]", value=0.3, step=0.05)
 gamma_betonu = st.sidebar.number_input("Ciężar obj. betonu zbiornika [kN/m³]", value=24.0)
 
 st.sidebar.markdown("### 2. Zagłębienie i Naziom")
@@ -782,3 +782,15 @@ with tab_optymalizator:
 
         else:
             st.warning("Uwaga: Parametry maszyny roboczej uniemożliwiają realizację układu przy zdefiniowanych obciążeniach. Wymagana redukcja skrajni narzędzia lub zwiększenie głębokości posadowienia pośredniego.")
+# ==========================================
+# STOPKA STRONY
+# ==========================================
+st.markdown(
+    """
+    <hr style="margin-top: 2.5rem; margin-bottom: 0.75rem; border: none; border-top: 1px solid #e0e0e0;">
+    <div style="text-align: center; color: #666666; font-size: 0.85rem; padding-bottom: 1rem;">
+        Damian Kubiak, student ZUT w Szczecinie
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
